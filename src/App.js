@@ -1,7 +1,15 @@
+import Footer from "./components/layouts/Footer";
+import Header from "./components/layouts/Header";
+import Home from "./pages/Home";
+
 function App() {
   return (
     <div className="App">
-     <h1>Home</h1>
+      <Header />
+      <div className="container">
+      <Home />
+      </div>
+      <Footer />
     </div>
   );
 }
