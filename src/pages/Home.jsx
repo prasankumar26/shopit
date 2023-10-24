@@ -1,7 +1,10 @@
 import React from 'react'
+import MetaData from '../components/layouts/MetaData'
 
 const Home = () => {
   return (
+    <>
+    <MetaData title="Buy Best Products From Prasan Store" />
     <div className="row">
         <div className="col-6 col-md-12">
         <h1 id="products_heading" className="text-secondary">
@@ -46,6 +49,7 @@ const Home = () => {
         </section>
         </div>
     </div>
+    </>
   )
 }
 
