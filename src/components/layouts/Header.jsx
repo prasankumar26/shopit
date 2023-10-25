@@ -1,7 +1,27 @@
 import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useGetMeQuery } from '../../redux/api/userApi'
+import { useSelector } from 'react-redux';
+import { useLazyLogoutQuery } from '../../redux/api/authApi';
+import toast from 'react-hot-toast';
 
 const Header = () => {
-  return (
+    const navigate = useNavigate()
+    const { isLoading} = useGetMeQuery();
+    const [logout, {data}] = useLazyLogoutQuery();
+
+    if(data?.message){
+        toast.error(data?.message)
+        navigate(0)
+    }
+    
+    const {user} = useSelector((state)=> state.auth)
+
+    const logoutUser = () =>{
+        logout();
+    }
+
+  return ( 
     <>
     <nav className="navbar row">
     <div className="col-12 col-md-3 ps-5">
@@ -39,7 +59,11 @@ const Header = () => {
             0
         </span>
         </a>
-        <div className="ms-4 dropdown">
+
+           
+         {
+            user ? (
+                <div className="ms-4 dropdown">
         <button
             className="btn dropdown-toggle text-white"
             type="button"
@@ -49,36 +73,40 @@ const Header = () => {
         >
             <figure className="avatar avatar-nav">
             <img
-                src="../images/default_avatar.jpg"
+                src={user?.avatar ? user?.avatar?.url : '../images/default_avatar.jpg'}
                 alt="User Avatar"
                 className="rounded-circle"
             />
             </figure>
-            <span>User</span>
+            <span>{user?.name}</span>
         </button>
         <div className="dropdown-menu w-100" aria-labelledby="dropDownMenuButton">
-            <a className="dropdown-item" href="/admin/dashboard">
+            <Link className="dropdown-item" to="/admin/dashboard">
             {" "}
             Dashboard{" "}
-            </a>
-            <a className="dropdown-item" href="/me/orders">
+            </Link>
+            <Link className="dropdown-item" to="/me/orders">
             {" "}
             Orders{" "}
-            </a>
-            <a className="dropdown-item" href="/me/profile">
+            </Link>
+            <Link className="dropdown-item" to="/me/profile">
             {" "}
             Profile{" "}
-            </a>
-            <a className="dropdown-item text-danger" href="/">
+            </Link>
+            <div className="dropdown-item text-danger"  onClick={logoutUser}>
             {" "}
             Logout{" "}
-            </a>
+            </div>
         </div>
         </div>
-        <a href="/login" className="btn ms-4" id="login_btn">
-        {" "}
-        Login{" "}
-        </a>
+            ) :  (
+            !isLoading && (
+            <Link to="/login" className="btn ms-4" id="login_btn">
+            Login
+            </Link>
+                )
+            )
+         }
     </div>
     </nav>
     </>
