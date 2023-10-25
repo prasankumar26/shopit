@@ -7,6 +7,7 @@ import { Toaster } from 'react-hot-toast';
 import ProductDetails from "./components/products/ProductDetails";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import Profile from "./components/user/Profile";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="contact" element={<Contact />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="me/profile" element={<Profile />} />
           <Route path="*" element={<NoPage />} />
         </Route>
        </Routes>
