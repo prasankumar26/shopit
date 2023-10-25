@@ -1,0 +1,100 @@
+import React, { useEffect, useState } from 'react'
+import UserLayout from './UserLayout'
+import { useUpdateProfileMutation } from '../../redux/api/userApi'
+import { useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+
+const UpdateUser = () => {
+
+    const navigate = useNavigate()
+
+    const initialState = {
+        name: '',
+        email: '',
+    }
+
+    const [values, setValues] = useState(initialState)
+
+    const [updateProfile, {isLoading, error, isSuccess}] = useUpdateProfileMutation();
+    const {user} = useSelector((state)=> state.auth)
+
+    const handleChange = (e) =>{
+        const {name, value} = e.target;
+        setValues({...values, [name]:value})
+    }
+
+    useEffect(() =>{
+      if(user){
+        setValues({
+            ...values,
+            name: user?.name,
+            email: user?.email,
+        })
+      }
+
+      if(error){
+        toast.error(error?.data?.message)
+      }
+      if(isSuccess){
+        toast.success("User Updated")
+        navigate('/me/profile')
+      }
+    }, [user, error, isSuccess])
+
+
+    const handleSubmit = (e) =>{
+        e.preventDefault()
+        updateProfile(values)
+    }
+
+
+  return (
+    <UserLayout>
+        <div className="row wrapper">
+  <div className="col-10 col-lg-8">
+    <form
+      className="shadow rounded bg-body"
+      onSubmit={handleSubmit}
+    >
+      <h2 className="mb-4">Update Profile</h2>
+      <div className="mb-3">
+        <label htmlFor="name_field" className="form-label">
+          {" "}
+          Name{" "}
+        </label>
+        <input
+          type="text"
+          id="name_field"
+          className="form-control"
+          name="name"
+          value={values.name}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="email_field" className="form-label">
+          {" "}
+          Email{" "}
+        </label>
+        <input
+          type="email"
+          id="email_field"
+          className="form-control"
+          name="email"
+          value={values.email}
+          onChange={handleChange}
+        />
+      </div>
+      <button type="submit" className="btn update-btn w-100" disabled={isLoading}>
+        {isLoading ? 'Updating...' : 'Update'}
+      </button>
+    </form>
+  </div>
+</div>
+    </UserLayout>
+
+  )
+}
+
+export default UpdateUser

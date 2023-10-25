@@ -8,6 +8,7 @@ import ProductDetails from "./components/products/ProductDetails";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Profile from "./components/user/Profile";
+import UpdateUser from "./components/user/UpdateUser";
 
 function App() {
   return (
@@ -17,10 +18,14 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="product/:id" element={<ProductDetails />} />
-          <Route path="contact" element={<Contact />} />
+          
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+
           <Route path="me/profile" element={<Profile />} />
+          <Route path="me/update_profile" element={<UpdateUser />} />
+
+          <Route path="contact" element={<Contact />} />
           <Route path="*" element={<NoPage />} />
         </Route>
        </Routes>
