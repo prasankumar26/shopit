@@ -9,6 +9,11 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Profile from "./components/user/Profile";
 import UpdateUser from "./components/user/UpdateUser";
+import ProtectedRoute from "./pages/auth/ProtectedRoute";
+import UploadAvatar from "./components/user/UploadAvatar";
+import UpdatePassword from "./components/user/UpdatePassword";
+import Forgotpassword from "./pages/auth/Forgotpassword";
+import Resetpassword from "./pages/auth/Resetpassword";
 
 function App() {
   return (
@@ -21,9 +26,29 @@ function App() {
           
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="password/forgot" element={<Forgotpassword />} />
+          <Route path="password/reset/:token" element={<Resetpassword />} />
 
-          <Route path="me/profile" element={<Profile />} />
-          <Route path="me/update_profile" element={<UpdateUser />} />
+          <Route path="me/profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="me/update_profile" element={
+          <ProtectedRoute>
+          <UpdateUser />
+          </ProtectedRoute>
+          } />
+          <Route path="me/update_avatar" element={
+          <ProtectedRoute>
+          <UploadAvatar />
+          </ProtectedRoute>
+          } />
+          <Route path="me/update_password" element={
+          <ProtectedRoute>
+          <UpdatePassword />
+          </ProtectedRoute>
+          } />
 
           <Route path="contact" element={<Contact />} />
           <Route path="*" element={<NoPage />} />

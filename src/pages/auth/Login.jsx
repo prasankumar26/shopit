@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useLoginMutation } from '../../redux/api/authApi';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Login = () => {
 
     const navigate = useNavigate()
 
-    const [login, {data, isError, error, isLoading}] = useLoginMutation()
+    const [login, {isSuccess, error, isLoading}] = useLoginMutation()
+    const {isAuthenticated} = useSelector((state) => state.auth)
 
     const initialtate = {
        email: '',
@@ -17,12 +19,16 @@ const Login = () => {
     const [values, setValues] = useState(initialtate);
 
     useEffect(() => {
-        if(isError){
+      if(isAuthenticated){
+        navigate('/')
+      }
+
+        if(error){
             toast.error(error?.data?.message)
         }
-      }, [isError]);
+      }, [error, isAuthenticated]);
 
-      if(data?.token){
+      if(isSuccess){
         toast?.success("Login Successfull")
         navigate('/')
       }

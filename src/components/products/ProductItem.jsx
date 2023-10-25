@@ -4,8 +4,7 @@ import StarRatings from 'react-star-ratings';
 
 const ProductItem = ({product}) => {
   return (
-   <>
-       <div className="col-sm-12 col-md-6 col-lg-3 my-3" key={product?._id}>
+       <div className="col-sm-12 col-md-6 col-lg-3 my-3">
         <div className="card p-3 rounded">
         <img
         className="card-img-top mx-auto"
@@ -42,7 +41,6 @@ const ProductItem = ({product}) => {
         </div>
         </div>
     </div>
-   </>
   )
 }
 

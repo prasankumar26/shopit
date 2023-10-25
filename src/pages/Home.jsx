@@ -30,7 +30,7 @@ const Home = () => {
             {
              data?.products?.map((product) =>{
                 return (
-                    <ProductItem product={product} />
+                    <ProductItem product={product}  key={product?._id} />
                 )
              })   
             }
