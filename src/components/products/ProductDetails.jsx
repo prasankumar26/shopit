@@ -4,10 +4,14 @@ import { useGetProductDetailsQuery } from '../../redux/api/productsApi';
 import Loader from '../Loader';
 import toast from 'react-hot-toast';
 import StarRatings from 'react-star-ratings';
+import { setCartItems } from '../../redux/features/cartSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const ProductDetails = () => {
 
     const [activeImg, setActiveImg] = useState('')
+    const [quantity, setQuantity] = useState(1)
+    const dispatch = useDispatch()
 
     const {id} = useParams();
 
@@ -23,9 +27,35 @@ const ProductDetails = () => {
             toast.error(error?.data?.message)
         }
       }, [isError]);
-      console.log(product, "product");
-      
-      if(isLoading) return <Loader />
+
+      const increaseQuantity = () =>{
+        const count = document.querySelector(".count")
+        if(count.valueAsNumber >= product?.stock) return;
+        const qty = count.valueAsNumber + 1;
+        setQuantity(qty);
+      }
+
+      const decreaseQuantity = () =>{ 
+        const count = document.querySelector(".count");
+        if(count.valueAsNumber <= 1) return;
+        const qty = count.valueAsNumber - 1;
+        setQuantity(qty);
+      }
+
+      const setItemToCart = () =>{
+        const cartItem = {
+          product: product?._id,
+          name: product?.name,
+          price: product?.price,
+          image: product?.images[0].url,
+          stock: product?.stock,
+          quantity
+        }
+        dispatch(setCartItems(cartItem)) 
+        toast.success("Item Added To Cart")
+      }
+
+  if(isLoading) return <Loader />
       
   return (
     <>
@@ -42,9 +72,9 @@ const ProductDetails = () => {
     </div>
     <div className="row justify-content-start mt-5">
         {
-            product?.images?.map((item) =>{
+            product?.images?.map((item, index) =>{
                 return (
-                <div className="col-2 ms-4 mt-2">
+                <div className="col-2 ms-4 mt-2" key={index}>
                 <a role="button">
                 <img
                     className={`d-block border rounded p-3 cursor-pointer ${item?.url === activeImg ? 'border-warning' : ''}`}
@@ -86,21 +116,22 @@ const ProductDetails = () => {
     </div>
     <hr />
     <p id="product_price">$ {product?.price}</p>
-    <div className="stockCounter d-inline">
-      <span className="btn btn-danger minus">-</span>
+    <div className="stockCounter d-inline" >
+      <span className="btn btn-danger minus" onClick={decreaseQuantity}>-</span>
       <input
         type="number"
         className="form-control count d-inline"
-        defaultValue={1}
-        readOnly=""
+        readOnly
+        value={quantity}
       />
-      <span className="btn btn-primary plus">+</span>
+      <span className="btn btn-primary plus" onClick={increaseQuantity}>+</span>
     </div>
     <button
       type="button"
       id="cart_btn"
       className="btn btn-primary d-inline ms-4"
-      disabled=""
+      disabled={product.stock <= 0}
+      onClick={setItemToCart}
     >
       Add to Cart
     </button>

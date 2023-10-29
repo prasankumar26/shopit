@@ -52,7 +52,6 @@ const Resetpassword = () => {
         e.preventDefault();
         resetPassword({token:params?.token, body:values})
         setValues(initialState)
-        console.log(values, "values");
     }
 
   return (
